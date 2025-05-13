@@ -17,7 +17,7 @@ CREATE INDEX idx_email ON employees(email);
 CREATE TABLE attendances(
   attendance_id SERIAL PRIMARY KEY,
   check_in TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
-  check_out TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+  check_out TIMESTAMP(0) WITHOUT TIME ZONE,
   employee_id INTEGER REFERENCES employees(employee_id)
   ON UPDATE CASCADE
   ON DELETE CASCADE
@@ -32,6 +32,7 @@ CREATE TABLE projects(
   client VARCHAR(45),
   start_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
   end_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+  employee_id INTEGER REFERENCES employees(employee_id);
   description TEXT
 );
 
