@@ -90,3 +90,98 @@ VALUES
     ('2023-05-01 09:10:00', '2023-05-01 18:30:00', 3),
     ('2023-05-02 08:55:00', '2023-05-02 17:45:00', 1),
     ('2023-05-02 09:00:00', '2023-05-02 18:00:00', 4);
+
+
+-- Выполнение заданий со второй лабы
+-- 1) многотабличный запрос выборки с сортировкой и отбором данных (INNER JOIN, WHERE, ORDER BY),
+SELECT 
+    t.task_name,
+    t.deadline,
+    p.project_name,
+    e.employee_name,
+    e.employee_surname
+FROM tasks t
+INNER JOIN projects p ON t.project_id = p.project_id
+INNER JOIN employees e ON e.employee_id = 1 -- например, сотрудник с ID 1
+WHERE t.status = FALSE
+ORDER BY t.deadline;
+
+-- 2)запрос с применением вычисляемых полей (примечание: не применять агрегатные функции), например, вычислить возраст, полную цену, и типа подобное
+SELECT 
+    employee_name,
+    employee_surname,
+    EXTRACT(YEAR FROM AGE(CURRENT_DATE, hire_date)) AS years_of_service
+FROM employees;
+
+-- 3) запрос выборки с внешним объединением двух отношений (LEFT|RIGHT JOIN)
+SELECT 
+    e.employee_name,
+    e.employee_surname,
+    t.task_name
+FROM employees e
+LEFT JOIN attendances a ON e.employee_id = a.employee_id
+LEFT JOIN tasks t ON t.project_id IN (
+    SELECT project_id FROM projects
+);
+
+-- 4) запрос группировкой, вычислением итогов и отбором данных (GROUP BY, HAVING),
+SELECT 
+    p.project_name,
+    COUNT(t.task_id) AS task_count
+FROM projects p
+JOIN tasks t ON p.project_id = t.project_id
+GROUP BY p.project_name
+HAVING COUNT(t.task_id) > 1;
+
+-- 5) запрос на добавление (INSERT INTO),
+INSERT INTO employees (employee_name, employee_surname, email, hire_date, position)
+VALUES ('Денис', 'Орлов', 'denis.orlov@example.com', '2023-02-15 09:00:00', 'DevOps');
+
+-- 6) запрос на обновление,
+UPDATE employees
+SET position = 'Старший DevOps'
+WHERE email = 'denis.orlov@example.com';
+
+-- 7) запрос на удаление,
+DELETE FROM tasks
+WHERE priority = 'critical';
+
+-- 8) запрос на создание новой таблицы на основе существующей
+CREATE TABLE overdue_tasks AS
+SELECT *
+FROM tasks
+WHERE deadline < NOW(); -- задачи, дедлайн которых уже прошел
+
+-- 9) запрос на объединение (UNION), где применимо (только в SQL)
+SELECT employee_name AS name FROM employees
+UNION
+SELECT project_name FROM projects;
+
+-- 10) вложенный запрос на SQL (вложение во фразе WHERE),
+SELECT *
+FROM tasks
+WHERE project_id IN (
+    SELECT project_id FROM projects
+    WHERE start_date > '2023-03-01'
+);
+
+-- 11) запрос на создание новой таблицы,
+CREATE TABLE archived_tasks (
+    task_id SERIAL PRIMARY KEY,
+    original_task_id INTEGER,
+    archived_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 12) запрос на создание индекса,
+CREATE INDEX idx_hire_date ON employees(hire_date);
+
+-- 13) запрос на создание представления, объединяющего данные двух таблиц.
+CREATE VIEW view_task_project AS
+SELECT 
+    t.task_name,
+    t.status,
+    t.priority,
+    p.project_name,
+    p.client
+FROM tasks t
+JOIN projects p ON t.project_id = p.project_id;
