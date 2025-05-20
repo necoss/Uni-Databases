@@ -33,8 +33,8 @@ A React application integrated with Supabase to create a database management int
 Create a `.env.local` file in the root directory with the following variables:
 
 \`\`\`
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SUPABASE_URL= your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY= your_supabase_anon_key
 \`\`\`
 
 ### Installation
@@ -42,13 +42,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 1. Clone the repository
 2. Install dependencies:
 
-\`\`\`bash
+\`\`\`
 npm install
 \`\`\`
 
 3. Run the development server:
 
-\`\`\`bash
+\`\`\`
 npm run dev
 \`\`\`
 
@@ -64,10 +64,6 @@ The application requires the following tables in your Supabase database:
 - `tasks`
 
 The schema for these tables is included in the SQL files in the `database` directory. You can run these SQL scripts in the Supabase SQL editor to create the tables.
-
-## Deployment
-
-This application can be deployed on Vercel. Make sure to set the environment variables in your Vercel project settings.
 
 ## License
 
